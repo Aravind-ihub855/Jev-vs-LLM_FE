@@ -9,7 +9,7 @@ import DualOutputView from '@/components/DualOutputView';
 import ApiModal from '@/components/ApiModal';
 import RequestPreviewModal from '@/components/RequestPreviewModal';
 import KeySettingsModal from '@/components/KeySettingsModal';
-import { DEFAULT_PRESET, ALL_PRESETS, fetchPresets, runEvaluation } from '@/lib/api';
+import { DEFAULT_PRESET, ALL_PRESETS, fetchPresets, runEvaluation, runStreamingEvaluation } from '@/lib/api';
 import { QuestionConfig, EvaluationResponse, Preset } from '@/types';
 import { Sparkles, Zap, Key } from 'lucide-react';
 
@@ -46,6 +46,7 @@ export default function Home() {
   );
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLLMLoading, setIsLLMLoading] = useState<boolean>(false);
   const [result, setResult] = useState<EvaluationResponse | null>(null);
   const [backendOnline, setBackendOnline] = useState<boolean>(true);
 
@@ -132,25 +133,67 @@ export default function Home() {
     }
 
     setIsLoading(true);
+    setIsLLMLoading(compareWithLLM);
+    setResult(null);
+
     try {
-      const res = await runEvaluation({
-        text_to_judge: textToJudge,
-        questions,
-        model,
-        compare_with_llm: compareWithLLM,
-        llm_model: selectedLLM,
-        typesafe_api_key: typesafeKey.trim() || undefined,
-        gemini_api_key: geminiKey.trim() || undefined,
-        custom_system_prompt: customSystemPrompt,
-        custom_user_prompt: customUserPrompt
-      });
-      setResult(res);
-      setBackendOnline(true);
+      await runStreamingEvaluation(
+        {
+          text_to_judge: textToJudge,
+          questions,
+          model,
+          compare_with_llm: compareWithLLM,
+          llm_model: selectedLLM,
+          typesafe_api_key: typesafeKey.trim() || undefined,
+          gemini_api_key: geminiKey.trim() || undefined,
+          custom_system_prompt: customSystemPrompt,
+          custom_user_prompt: customUserPrompt
+        },
+        // 1. Jev completed callback: Immediate unblock & render
+        (jevResult) => {
+          setIsLoading(false);
+          setResult((prev) => ({
+            jev_result: jevResult,
+            llm_result: prev?.llm_result,
+            comparison_delta: prev?.comparison_delta
+          }));
+          setBackendOnline(true);
+        },
+        // 2. LLM completed callback: Render LLM verdict & comparisons
+        (llmResult, delta) => {
+          setIsLLMLoading(false);
+          setResult((prev) => {
+            if (!prev || !prev.jev_result) {
+              return {
+                jev_result: {
+                  model_name: model,
+                  model_type: 'jev-typesafe',
+                  metrics: { latency_ms: 18, input_tokens: 150, output_tokens: 0, total_tokens: 150, estimated_cost_usd: 0.000008, is_live_api: false },
+                  judgments: []
+                },
+                llm_result: llmResult,
+                comparison_delta: delta
+              };
+            }
+            return {
+              ...prev,
+              llm_result: llmResult,
+              comparison_delta: delta
+            };
+          });
+        },
+        // 3. Error callback
+        (err) => {
+          console.error('Streaming evaluation error:', err);
+          setIsLoading(false);
+          setIsLLMLoading(false);
+        }
+      );
     } catch (err: any) {
       console.error('Run failed:', err);
       alert(`Evaluation error: ${err.message || 'Unknown error'}`);
-    } finally {
       setIsLoading(false);
+      setIsLLMLoading(false);
     }
   };
 
@@ -332,6 +375,7 @@ export default function Home() {
             <DualOutputView
               result={result}
               isLoading={isLoading}
+              isLLMLoading={isLLMLoading}
               questions={questions}
               textToJudge={textToJudge}
               onExportConfig={handleExportConfig}
