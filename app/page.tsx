@@ -358,6 +358,8 @@ export default function Home() {
         model={model}
         compareWithLLM={compareWithLLM}
         selectedLLM={selectedLLM}
+        customSystemPrompt={customSystemPrompt}
+        customUserPrompt={customUserPrompt}
       />
 
       <KeySettingsModal

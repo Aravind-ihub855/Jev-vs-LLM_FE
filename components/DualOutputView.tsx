@@ -397,26 +397,42 @@ export default function DualOutputView({
                                 </div>
                               )}
 
-                              {/* 2. NOUL (YES/NO) */}
-                              {jJev.type === 'yes_no' && (
-                                <div className="flex items-center gap-4 bg-white p-4 rounded-xl border border-emerald-200/80 shadow-2xs">
-                                  <div className="relative w-14 h-14 rounded-full border-3 border-emerald-500 bg-emerald-50/50 flex items-center justify-center font-black text-sm text-emerald-700 shadow-2xs">
-                                    {Math.round(jJev.confidence * 100)}%
-                                  </div>
-                                  <div>
-                                    <span
-                                      className={`text-2xl font-black ${
-                                        jJev.verdict.toLowerCase() === 'yes' ? 'text-emerald-600' : 'text-slate-900'
+                              {/* 2. NOUL (YES/NO) - UNIFIED CONSISTENT THEME */}
+                              {jJev.type === 'yes_no' && (() => {
+                                const isYes = jJev.verdict.toLowerCase().includes('yes');
+                                return (
+                                  <div className="flex items-center gap-4 bg-white p-4 rounded-xl border border-emerald-200/80 shadow-2xs">
+                                    <div
+                                      className={`relative w-14 h-14 rounded-full border-2 flex items-center justify-center font-black text-sm shadow-2xs ${
+                                        isYes
+                                          ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
+                                          : 'border-slate-300 bg-slate-50 text-slate-700'
                                       }`}
                                     >
-                                      {jJev.verdict}
-                                    </span>
-                                    <p className="text-[11px] text-slate-500 font-medium">
-                                      Noul probability: {jJev.confidence.toFixed(2)}
-                                    </p>
+                                      {Math.round(jJev.confidence * 100)}%
+                                    </div>
+                                    <div>
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-2xl font-black text-slate-900">
+                                          {jJev.verdict}
+                                        </span>
+                                        <span
+                                          className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${
+                                            isYes
+                                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                              : 'bg-slate-100 text-slate-600 border-slate-200'
+                                          }`}
+                                        >
+                                          {isYes ? 'Affirmative' : 'Negative'}
+                                        </span>
+                                      </div>
+                                      <p className="text-[11px] text-slate-500 font-medium">
+                                        Noul calibrated probability: {jJev.confidence.toFixed(2)}
+                                      </p>
+                                    </div>
                                   </div>
-                                </div>
-                              )}
+                                );
+                              })()}
 
                               {/* 3. SCORE */}
                               {jJev.type === 'score' && (() => {
@@ -505,34 +521,42 @@ export default function DualOutputView({
                                 </div>
                               )}
 
-                              {/* 2. NOUL (YES/NO) HIGHLIGHT (MATCHING JEV CIRCULAR RING) */}
-                              {q.type === 'yes_no' && (
-                                <div className="flex items-center gap-4 bg-white p-4 rounded-xl border border-blue-200/90 shadow-2xs">
-                                  <div
-                                    className={`relative w-14 h-14 rounded-full border-3 flex items-center justify-center font-black text-xs shadow-2xs shrink-0 ${
-                                      jLLM.verdict.toLowerCase().includes('yes')
-                                        ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
-                                        : 'border-rose-500 bg-rose-50 text-rose-700'
-                                    }`}
-                                  >
-                                    {jLLM.verdict.toLowerCase().includes('yes') ? 'YES' : 'NO'}
-                                  </div>
-                                  <div>
-                                    <span
-                                      className={`text-2xl font-black ${
-                                        jLLM.verdict.toLowerCase().includes('yes')
-                                          ? 'text-emerald-600'
-                                          : 'text-slate-900'
+                              {/* 2. NOUL (YES/NO) - UNIFIED CONSISTENT THEME */}
+                              {q.type === 'yes_no' && (() => {
+                                const isYes = jLLM.verdict.toLowerCase().includes('yes');
+                                return (
+                                  <div className="flex items-center gap-4 bg-white p-4 rounded-xl border border-blue-200/90 shadow-2xs">
+                                    <div
+                                      className={`relative w-14 h-14 rounded-full border-2 flex items-center justify-center font-black text-xs shadow-2xs shrink-0 ${
+                                        isYes
+                                          ? 'border-blue-500 bg-blue-50 text-blue-700'
+                                          : 'border-slate-300 bg-slate-50 text-slate-700'
                                       }`}
                                     >
-                                      {jLLM.verdict}
-                                    </span>
-                                    <p className="text-[11px] text-slate-500 font-medium">
-                                      Generative text classification verdict
-                                    </p>
+                                      {isYes ? 'YES' : 'NO'}
+                                    </div>
+                                    <div>
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-2xl font-black text-slate-900">
+                                          {jLLM.verdict}
+                                        </span>
+                                        <span
+                                          className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${
+                                            isYes
+                                              ? 'bg-blue-50 text-blue-700 border-blue-200'
+                                              : 'bg-slate-100 text-slate-600 border-slate-200'
+                                          }`}
+                                        >
+                                          {isYes ? 'Affirmative' : 'Negative'}
+                                        </span>
+                                      </div>
+                                      <p className="text-[11px] text-slate-500 font-medium">
+                                        Generative classification verdict
+                                      </p>
+                                    </div>
                                   </div>
-                                </div>
-                              )}
+                                );
+                              })()}
 
                               {/* 3. SCORE HIGHLIGHT (DYNAMICALLY COMPUTED GRADIENT TRACK) */}
                               {q.type === 'score' && (() => {
