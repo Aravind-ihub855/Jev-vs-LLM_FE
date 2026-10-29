@@ -138,34 +138,34 @@ export const ALL_PRESETS: Preset[] = [
     ]
   },
   {
-    id: 'model_routing',
-    title: 'Model routing',
+    id: 'agent_routing',
+    title: 'Agent routing',
     category: 'routing',
-    description: 'Route incoming user prompts to the most cost-efficient execution model.',
+    description: 'Analyze incoming enterprise user requests to route to the appropriate specialized autonomous agent.',
     text_to_judge: `Can you write a Python script using pandas and matplotlib to read quarterly sales data from CSV, compute the rolling 30-day average, and export an annotated line chart with trendlines?`,
     questions: [
       {
-        id: 'rout_q1',
+        id: 'agent_rout_q1',
         type: 'choice',
-        key: 'task_type',
-        question: 'What is the primary technical domain of this request?',
+        key: 'assigned_agent',
+        question: 'Which dedicated autonomous agent should assume ownership of this task?',
         options: [
-          { label: 'Data Analysis & Code', description: 'Python, pandas, visualization' },
-          { label: 'Creative Writing', description: 'Essays, marketing copy, poetry' },
-          { label: 'General QA', description: 'Factual queries and definitions' }
+          { label: 'Data Analysis & Code Agent', description: 'Python, pandas, visualization, statistical scripting' },
+          { label: 'Creative Writing Agent', description: 'Narrative drafting, marketing copywriting, speechwriting' },
+          { label: 'General QA Agent', description: 'Factual knowledge, reference lookup, conceptual definitions' }
         ],
         score_min: 0.0,
         score_max: 2.0
       },
       {
-        id: 'rout_q2',
+        id: 'agent_rout_q2',
         type: 'yes_no',
         key: 'requires_code_execution',
         question: 'Does this task require code generation or Python expertise?',
         options: []
       },
       {
-        id: 'rout_q3',
+        id: 'agent_rout_q3',
         type: 'score',
         key: 'reasoning_complexity',
         question: 'Rate the algorithmic complexity of this task.',
@@ -173,6 +173,48 @@ export const ALL_PRESETS: Preset[] = [
           { label: 'Simple', description: 'Direct one-line script' },
           { label: 'Moderate', description: 'Multi-step data pipeline with chart styling' },
           { label: 'Complex', description: 'Advanced statistical computation' }
+        ],
+        score_min: 0.0,
+        score_max: 2.0
+      }
+    ]
+  },
+  {
+    id: 'model_routing',
+    title: 'Model routing',
+    category: 'routing',
+    description: 'Evaluate incoming prompt complexity to dynamically route to the most cost-efficient LLM model tier.',
+    text_to_judge: `Design a distributed, multi-region event-driven microservices architecture handling 500,000 requests/sec with CQRS, Kafka log-compaction, consensus under Byzantine network partitions, and formal TLA+ state verification proofs.`,
+    questions: [
+      {
+        id: 'model_rout_q1',
+        type: 'choice',
+        key: 'recommended_llm',
+        question: 'Which LLM model tier should execute this prompt for optimal performance and cost?',
+        options: [
+          { label: 'Claude 3.5 Opus', description: 'Deep multi-step architectural reasoning, formal mathematical proofs, complex systems design' },
+          { label: 'Gemini 2.5 Flash', description: 'Balanced high-speed general reasoning, summarization, and standard coding' },
+          { label: 'Claude 3.5 Haiku', description: 'Ultra-fast low-latency queries, simple lookups, classification, and drafting' }
+        ],
+        score_min: 0.0,
+        score_max: 2.0
+      },
+      {
+        id: 'model_rout_q2',
+        type: 'yes_no',
+        key: 'requires_frontier_reasoning',
+        question: 'Does this task require frontier-grade deep reasoning and formal architecture design?',
+        options: []
+      },
+      {
+        id: 'model_rout_q3',
+        type: 'score',
+        key: 'cost_sensitivity',
+        question: 'Rate the computation overhead and reasoning depth required.',
+        options: [
+          { label: 'Low tier (Haiku)', description: 'Minimal token overhead, fast response' },
+          { label: 'Mid tier (Flash)', description: 'Moderate complexity and balanced inference cost' },
+          { label: 'Frontier tier (Opus)', description: 'Maximum reasoning depth, highest token inference tier' }
         ],
         score_min: 0.0,
         score_max: 2.0
@@ -854,6 +896,8 @@ function simulateLocalEvaluation(payload: {
         opt = labels.find((l) => l.toLowerCase().includes('hostile')) || labels[0];
       } else if (textLower.includes('order #') || textLower.includes('tracking') || textLower.includes('transit')) {
         opt = labels.find((l) => l.toLowerCase().includes('track')) || labels[0];
+      } else if (textLower.includes('byzantine') || textLower.includes('tla+') || textLower.includes('event-driven') || textLower.includes('kafka')) {
+        opt = labels.find((l) => l.toLowerCase().includes('opus') || l.toLowerCase().includes('claude')) || labels[0];
       } else if (textLower.includes('parquet') || textLower.includes('pipeline') || textLower.includes('python')) {
         opt = labels.find((l) => l.toLowerCase().includes('data') || l.toLowerCase().includes('code')) || labels[0];
       } else if (textLower.includes('acoustic isolation') || textLower.includes('finest audio') || textLower.includes('headphones')) {

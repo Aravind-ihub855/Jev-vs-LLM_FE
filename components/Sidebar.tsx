@@ -17,7 +17,7 @@ import {
   ChevronRight,
   PanelLeftClose,
   PanelLeftOpen,
-  Cpu,
+  Bot,
   Layers
 } from 'lucide-react';
 import { Preset } from '@/types';
@@ -57,7 +57,9 @@ export default function Sidebar({
       case 'content_moderation':
         return Shield;
       case 'chatbot_intent':
-        return Cpu;
+        return Sparkles;
+      case 'agent_routing':
+        return Bot;
       case 'model_routing':
         return GitBranch;
       case 'agent_guardrail':
