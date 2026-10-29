@@ -123,6 +123,10 @@ export default function Home() {
   };
 
   const handleRun = async () => {
+    if (currentPreset.version_tag === '1.14') {
+      alert('This use case requires the Jev 1.14 model which is not currently available.');
+      return;
+    }
     if (!textToJudge.trim()) {
       alert('Please provide scenario context / text to judge.');
       return;
@@ -266,7 +270,7 @@ export default function Home() {
         <header className="h-16 px-6 lg:px-8 bg-white/90 backdrop-blur-md border-b border-slate-200/80 flex items-center justify-between sticky top-0 z-20">
           <div className="flex items-center gap-3">
             <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-100 text-slate-700">
-              Agentic Workbench
+              Playground
             </span>
             <span className="text-sm font-extrabold text-slate-900 truncate">
               {currentPreset.title}
@@ -276,17 +280,8 @@ export default function Home() {
           <div className="flex items-center gap-3 text-xs">
             <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-600 font-bold">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Jev 1.13 vs Gemini 3.5</span>
+              <span>{currentPreset.version_tag === '1.14' ? 'Jev 1.14 vs Gemini 3.5' : 'Jev 1.13 vs Gemini 3.5'}</span>
             </div>
-
-            <button
-              type="button"
-              onClick={() => setIsKeyModalOpen(true)}
-              className="py-1 px-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex items-center gap-1.5"
-            >
-              <Key className="w-3 h-3 text-amber-500" />
-              <span>Keys</span>
-            </button>
           </div>
         </header>
 
@@ -296,15 +291,10 @@ export default function Home() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200/70">
             <div className="space-y-1.5">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  Agentic Workbench
-                </span>
-                <span className="text-xs text-slate-400 font-mono">
-                  SNS SQUARE · Dual Architecture Playground
-                </span>
+
               </div>
               <h1 className="text-2xl lg:text-3xl font-black text-slate-900 tracking-tight">
-                Jev vs Generative LLM Benchmark
+                Jev vs Generative LLM 
               </h1>
             </div>
 

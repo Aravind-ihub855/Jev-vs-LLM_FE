@@ -17,7 +17,8 @@ import {
   ChevronDown,
   Layers,
   MessageSquare,
-  Bot
+  Bot,
+  Lock
 } from 'lucide-react';
 import { QuestionConfig, QuestionType } from '@/types';
 
@@ -159,6 +160,8 @@ export default function InputStudio({
     Math.floor((safeSystemPrompt.length + safeUserPrompt.length + safeTextToJudge.length) / 4) + 120
   );
 
+  const isJev114Required = versionTag === '1.14';
+
   return (
     <div className="rounded-3xl border border-slate-200/80 bg-white p-6 lg:p-8 card-elevation space-y-6">
       {/* Top Header: Scenario Title & Mode Switcher */}
@@ -287,10 +290,16 @@ export default function InputStudio({
             {/* Header */}
             <div className="flex items-center justify-between border-b border-emerald-100 pb-2.5">
               <div className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded-md bg-emerald-600 text-white font-black text-xs flex items-center justify-center">
-                  J
+                <div className="w-6 h-6 rounded-md bg-white border border-emerald-200/90 flex items-center justify-center p-0.5 shadow-2xs shrink-0">
+                  <img
+                    src="/TypeSafe_AI_Symbol_0.svg"
+                    alt="Jev"
+                    className="w-4 h-4 object-contain"
+                  />
+                </div>
+                <span className="text-xs font-extrabold text-slate-900">
+                  {isJev114Required ? 'Jev 1.14 Primitives' : 'Jev 1.13 Primitives'}
                 </span>
-                <span className="text-xs font-extrabold text-slate-900">Jev 1.13 Primitives</span>
               </div>
               <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
                 Zero Output Tokens
@@ -314,8 +323,8 @@ export default function InputStudio({
                       >
                         <option value="choice">CHOICE</option>
                         <option value="yes_no">NOUL (YES/NO)</option>
-                        <option value="score">SCORE RUBRIC</option>
-                        <option value="box">BOX (GROUNDING)</option>
+                        <option value="score">SCORE </option>
+
                       </select>
 
                       <input
@@ -456,7 +465,7 @@ export default function InputStudio({
                 className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:border-emerald-400 hover:text-emerald-700 text-slate-700 text-[11px] font-bold shadow-2xs transition-all cursor-pointer flex items-center gap-1"
               >
                 <Plus className="w-3 h-3 text-emerald-600" />
-                <span>+ Yes/No</span>
+                <span>Noul</span>
               </button>
               <button
                 type="button"
@@ -464,7 +473,7 @@ export default function InputStudio({
                 className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:border-emerald-400 hover:text-emerald-700 text-slate-700 text-[11px] font-bold shadow-2xs transition-all cursor-pointer flex items-center gap-1"
               >
                 <Plus className="w-3 h-3 text-emerald-600" />
-                <span>+ Choice</span>
+                <span>Choice</span>
               </button>
               <button
                 type="button"
@@ -472,7 +481,7 @@ export default function InputStudio({
                 className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 hover:border-emerald-400 hover:text-emerald-700 text-slate-700 text-[11px] font-bold shadow-2xs transition-all cursor-pointer flex items-center gap-1"
               >
                 <Plus className="w-3 h-3 text-emerald-600" />
-                <span>+ Score</span>
+                <span>Score</span>
               </button>
 
             </div>
@@ -490,8 +499,12 @@ export default function InputStudio({
               {/* Header */}
               <div className="flex items-center justify-between border-b border-blue-100 pb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center shadow-2xs">
-                    <Sparkles className="w-3.5 h-3.5" />
+                  <div className="w-6 h-6 rounded-md bg-white border border-blue-200/90 flex items-center justify-center p-0.5 shadow-2xs shrink-0">
+                    <img
+                      src="/gemini-color.svg"
+                      alt="Google Gemini"
+                      className="w-4 h-4 object-contain"
+                    />
                   </div>
                   <div>
                     <span className="text-xs font-black text-blue-950">Gemini Generative Prompt</span>
@@ -590,24 +603,42 @@ export default function InputStudio({
 
       {/* 3. PRIMARY ACTION BAR */}
       <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
-        <button
-          type="button"
-          onClick={onRun}
-          disabled={isLoading}
-          className="py-3 px-7 rounded-xl bg-slate-900 hover:bg-black text-white font-extrabold text-xs shadow-md shadow-slate-900/15 flex items-center gap-2 cursor-pointer transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
-        >
-          {isLoading ? (
-            <>
-              <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              <span>Running Parallel Benchmark...</span>
-            </>
-          ) : (
-            <>
-              <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-              <span>Run Both Models in Parallel (Jev 1.13 vs Gemini 3.5)</span>
-            </>
-          )}
-        </button>
+        {isJev114Required ? (
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <button
+              type="button"
+              disabled={true}
+              title="Requires Jev 1.14 model which is not currently available"
+              className="py-3 px-7 rounded-xl bg-slate-200 text-slate-500 font-extrabold text-xs shadow-none border border-slate-300 flex items-center gap-2 cursor-not-allowed opacity-80"
+            >
+              <Lock className="w-3.5 h-3.5 text-slate-500" />
+              <span>Run Both Models in Parallel (Jev 1.14 vs Gemini 3.5)</span>
+            </button>
+            <span className="text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1 rounded-lg flex items-center gap-1.5 shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+              Locked · Requires Jev 1.14 (Vision & Long Context)
+            </span>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={onRun}
+            disabled={isLoading}
+            className="py-3 px-7 rounded-xl bg-slate-900 hover:bg-black text-white font-extrabold text-xs shadow-md shadow-slate-900/15 flex items-center gap-2 cursor-pointer transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {isLoading ? (
+              <>
+                <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span>Running Parallel Benchmark...</span>
+              </>
+            ) : (
+              <>
+                <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                <span>Run Both Models in Parallel (Jev 1.13 vs Gemini 3.5)</span>
+              </>
+            )}
+          </button>
+        )}
 
         <div className="flex items-center gap-4 text-xs">
 

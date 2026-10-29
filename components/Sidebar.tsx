@@ -125,9 +125,13 @@ export default function Sidebar({
         <div className="px-4 py-3 border-b border-slate-100 space-y-1.5">
           <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-emerald-50/60 border border-emerald-200/70">
             <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-md bg-emerald-600 text-white font-black text-[10px] flex items-center justify-center shadow-xs">
-                J
-              </span>
+              <div className="w-6 h-6 rounded-md bg-white border border-emerald-200/90 flex items-center justify-center p-0.5 shadow-2xs shrink-0">
+                <img
+                  src="/TypeSafe_AI_Symbol_0.svg"
+                  alt="Jev (TypeSafe AI)"
+                  className="w-4 h-4 object-contain"
+                />
+              </div>
               <span className="text-xs font-bold text-slate-800">Jev 1.13</span>
             </div>
             <span className="px-2 py-0.2 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
@@ -137,8 +141,12 @@ export default function Sidebar({
 
           <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-blue-50/60 border border-blue-200/70">
             <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-md bg-blue-600 text-white flex items-center justify-center shadow-xs">
-                <Sparkles className="w-3 h-3" />
+              <div className="w-6 h-6 rounded-md bg-white border border-blue-200/90 flex items-center justify-center p-0.5 shadow-2xs shrink-0">
+                <img
+                  src="/gemini-color.svg"
+                  alt="Google Gemini"
+                  className="w-4 h-4 object-contain"
+                />
               </div>
               <span className="text-xs font-bold text-slate-800">Gemini 3.5</span>
             </div>
@@ -150,16 +158,24 @@ export default function Sidebar({
       ) : (
         <div className="py-2.5 border-b border-slate-100 flex flex-col items-center gap-2">
           <div
-            title="Jev 1.13 (Decision Modal)"
-            className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 font-black text-xs flex items-center justify-center shadow-2xs"
+            title="Jev 1.13 (Decision Model)"
+            className="w-8 h-8 rounded-lg bg-white border border-emerald-200 flex items-center justify-center p-1 shadow-2xs"
           >
-            J
+            <img
+              src="/TypeSafe_AI_Symbol_0.svg"
+              alt="Jev (TypeSafe AI)"
+              className="w-5 h-5 object-contain"
+            />
           </div>
           <div
             title="Gemini 3.5 Flash Lite"
-            className="w-8 h-8 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shadow-2xs"
+            className="w-8 h-8 rounded-lg bg-white border border-blue-200 flex items-center justify-center p-1 shadow-2xs"
           >
-            <Sparkles className="w-3.5 h-3.5" />
+            <img
+              src="/gemini-color.svg"
+              alt="Google Gemini"
+              className="w-5 h-5 object-contain"
+            />
           </div>
         </div>
       )}
@@ -225,18 +241,6 @@ export default function Sidebar({
       <div className="p-3.5 border-t border-slate-100 bg-slate-50/60 space-y-2 text-xs">
         {!isCollapsed ? (
           <>
-            <div className="flex items-center justify-between text-[11px] text-slate-500 mono-font">
-              <span>Tokens:</span>
-              <span className="font-bold text-slate-800">97,712 left</span>
-            </div>
-
-            <div className="flex items-center justify-between text-[11px]">
-              <span className="text-slate-500">Engines:</span>
-              <span className="flex items-center gap-1.5 font-bold text-emerald-700">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                {backendOnline ? 'Both Models Live' : 'Offline'}
-              </span>
-            </div>
 
             <button
               type="button"
